@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Vérification du compte</h2>
+{% if global_error %}
+  <div class="error" style="color:red; margin-bottom:10px;">{{ global_error }}</div>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label>Code reçu par email</label>
+        <input type="text" name="email_code">
+        {% if errors.email_code %}<div class="error">{{ errors.email_code }}</div>{% endif %}
+    </div>
+    <div>
+        <label>Code reçu par SMS</label>
+        <input type="text" name="phone_code">
+        {% if errors.phone_code %}<div class="error">{{ errors.phone_code }}</div>{% endif %}
+    </div>
+    <button type="submit">Valider</button>
+</form>
+{% endblock %}

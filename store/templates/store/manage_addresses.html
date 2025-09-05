@@ -1,0 +1,35 @@
+{% extends 'store/base.html' %}
+{% block title %}Mes adresses - Woodi Tech{% endblock %}
+{% block content %}
+<div class="container py-5 my-5">
+    <h2 class="mb-4" style="color:#191989;font-weight:700;text-align:center;">Mes adresses de livraison</h2>
+<div class="d-flex justify-content-center mb-4">
+    <a href="{% url 'store:add_address' %}" class="btn btn-success" style="font-weight:600;">Ajouter une adresse</a>
+</div>
+<div class="row g-4 justify-content-center">
+    {% for address in addresses %}
+    <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+        <div class="card shadow-sm w-100" style="border-radius:16px;overflow:hidden;">
+            <div class="card-body">
+                <h5 class="card-title" style="color:#191989;font-weight:700;">{{ address.full_name }}</h5>
+                <div class="mb-1"><strong>Téléphone :</strong> {{ address.phone }}</div>
+                <div class="mb-1"><strong>Région :</strong> {{ address.region }}</div>
+                <div class="mb-1"><strong>Ville :</strong> {{ address.city }}</div>
+                <div class="mb-1"><strong>Zone :</strong> {{ address.zone }}</div>
+                <div class="mb-2"><strong>Défaut :</strong> {% if address.is_default %}<span class="badge bg-success">Oui</span>{% else %}Non{% endif %}</div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'store:edit_address' address.pk %}" class="btn btn-warning w-50">Modifier</a>
+                    <a href="{% url 'store:delete_address' address.pk %}" class="btn btn-danger w-50">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center text-muted">Aucune adresse enregistrée.</div>
+    {% endfor %}
+</div>
+<div class="text-center mt-4">
+    <a href="{% url 'store:checkout' %}" class="btn btn-secondary">Retour au paiement</a>
+</div>
+</div>
+{% endblock %}

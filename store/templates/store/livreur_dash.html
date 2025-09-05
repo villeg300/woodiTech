@@ -1,0 +1,41 @@
+{% extends 'store/base.html' %}
+{% block title %}Espace livreur - Woodi Tech{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold text-primary mb-4">Commandes à livrer</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-info">
+                <tr>
+                    <th>#</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Montant</th>
+                    <th>Adresse</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                <tr>
+                    <td>{{ commande.id }}</td>
+                    <td>{{ commande.user.get_full_name }}</td>
+                    <td>{{ commande.created_at|date:"d/m/Y H:i" }}</td>
+                    <td>{{ commande.total_amount }} FCFA</td>
+                    <td>{{ commande.shipping_address.full_name }}<br>{{ commande.shipping_address.city }}<br>{{ commande.shipping_address.zone }}<br>{{ commande.shipping_address.phone }}</td>
+                    <td>
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="commande_id" value="{{ commande.id }}">
+                            <button type="submit" class="btn btn-primary btn-sm">Prendre en charge</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center">Aucune commande à livrer.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

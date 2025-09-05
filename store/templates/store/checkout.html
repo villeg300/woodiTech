@@ -1,0 +1,38 @@
+{% extends 'store/base.html' %}
+{% block title %}Valider la commande - Ma Boutique{% endblock %}
+{% block content %}
+        <div class="container py-4 my-5">
+            <div class="row justify-content-center my-5">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h2 class="mb-0">Valider la commande</h2>
+                        </div>
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Adresse de livraison</label>
+                                    <div class="input-group">
+                                        <select name="address" class="form-select" required>
+                                            <option value="">Choisir une adresse</option>
+                                            {% for addr in addresses %}
+                                                <option value="{{ addr.id }}" {% if selected_address and addr.id == selected_address.id %}selected{% endif %}>
+                                                    {{ addr.full_name }} - {{ addr.city }} {{ addr.zone }} ({{ addr.phone }})
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <a href="{% url 'store:manage_addresses' %}" class="btn btn-outline-secondary ms-2">Gérer mes adresses</a>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <p class="fs-5"><strong>Total : <span class="text-success">{{ cart.total }} €</span></strong></p>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">Confirmer la commande</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,279 @@
+{% extends 'store/base.html' %}
+{% block title %}Mon panier - Woodi Tech{% endblock %}
+{% block content %}
+<div class="py-5">
+    <style>
+        .cart-wrapper {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            border: none;
+            transition: transform 0.2s;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #4f46e5, #4338ca);
+        }
+
+        .remove-btn {
+            color: #dc2626;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .remove-btn:hover {
+            color: #991b1b;
+        }
+
+        .quantity-btn {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background: #f3f4f6;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .quantity-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .discount-badge {
+            background: #dcfce7;
+            color: #166534;
+            font-size: 0.875rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+    </style>
+    <div class="cart-wrapper">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="d-flex">
+                        {% if messages %}
+                            <div class="container mt-4">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if cart.items.all %}
+                <!-- Cart Items Section -->
+                <div class="col-lg-8">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">{{ cart.user.first_name }} {{ cart.user.last_name }}</h4>
+                        <span class="text-muted">{{ cart.items.count }} items</span>
+                    </div>
+
+                    <!-- Product Cards -->
+                    <div class="d-flex flex-column gap-3">
+                        {% for item in cart.items.all %}
+                        <!-- Product -->
+                        <div class="product-card p-3 shadow-sm">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-image">
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="mb-1 text-capitalize">{{ item.product.name }}</h6>
+                                    <p class="text-muted mb-0">Categorie | {{ item.product.category }}</p>
+                                    {% if promo_code and promo_code.discount_percentage > 0 %}
+                                        <span class="discount-badge mt-2">-{{ promo_code.discount_percentage }}%</span>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-3">
+                                    <form method="post" action="{% url 'store:update_cart_item' item.pk %}" class="d-flex align-items-center gap-2 mb-2">
+                                        {% csrf_token %}
+                                        <div class="d-flex align-items-center gap-2">
+                                            <button class="quantity-btn" onclick="updateQuantity(1, -1)" type="submit">-</button>
+                                            <input type="number" class="quantity-input" name="quantity" value="{{ item.quantity }}" min="1">
+                                            <button class="quantity-btn" onclick="updateQuantity(1, 1)" type="submit">+</button>
+                                        </div>
+                                    </form>                                   
+                                    
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="fw-bold">{{ item.product.price }} FCFA</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <form method="post" action="{% url 'store:remove_from_cart' item.pk %}">
+                                    {% csrf_token %}
+                                     <button type="submit" class="btn">SUP<i class="bi bi-trash remove-btn"></i></button>
+                                    </form> 
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Summary Section -->
+                <div class="col-lg-4">
+                    <div class="summary-card p-4 shadow-sm">
+                        <h5 class="mb-4">Ma Commande</h5>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Sous-Total</span>
+                            <span>{{ cart.total }} FCFA</span>
+                        </div>
+                        {% if promo_code %}
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Code Promo ({{ promo_code.code }})</span>
+                            <span class="text-success">-{{ discount }} FCFA</span>
+                        </div>
+                        {% endif %}
+                        {% if shipping_fee > 0 %}
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Livraison</span>
+                            <span>{{ shipping_fee }} FCFA</span>
+                        </div>
+                        {% if shipping_details %}
+                        <ul class="mb-2 ps-3 small">
+                            {% for detail in shipping_details %}
+                            <li>{{ detail.label }} : <strong>{{ detail.fee }} FCFA</strong></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% endif %}
+                        <hr>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fw-bold">Total</span>
+                            <span class="fw-bold">{{ total|default:"0" }} FCFA</span>
+                        </div>
+
+                        <!-- Promo Code -->
+                        <div class="mb-4">
+                            <form method="post" action="{% url 'store:apply_promo' %}" class="input-group">
+                                {% csrf_token %}
+                                <input type="text" name="code" class="form-control" placeholder="Code promo" required>
+                                <button class="btn btn-outline-secondary" type="submit">Appliquer</button>
+                            </form>
+                            {# Les messages sont désormais affichés globalement dans base.html #}
+                        </div>
+
+                        <a href="{% url 'store:checkout' %}" class="btn btn-primary checkout-btn w-100 mb-3">
+                            Proceder a la validation
+                        </a>
+                        
+                        <div class="d-flex justify-content-center gap-2">
+                            <i class="bi bi-shield-check text-success"></i>
+                            <small class="text-muted">Securisée</small>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                    <div class="col-lg-8">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">{{ user.first_name }}</h4>
+                        <span class="text-muted">0 item</span>
+                    </div>
+
+                    <!-- Product Cards -->
+                    <div class="d-flex flex-column gap-3">
+                        <p class="text-center">Votre panier est vide.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="summary-card p-4 shadow-sm">
+                        <h5 class="mb-4">Ma Commande</h5>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Sous-Total</span>
+                            <span>0.00 FCFA</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Remise</span>
+                            <span class="text-success">-0.00 FCFA</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Livraison</span>
+                            <span>0.00 FCFA</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-4" >
+                            <span class="fw-bold">Total</span>
+                            <span class="fw-bold">0.00 FCFA</span>
+                        </div>
+
+                        <!-- Promo Code -->
+                        <div class="mb-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Promo code" disabled>
+                                <button class="btn btn-outline-secondary" type="button" disabled>Apply</button>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary checkout-btn w-100 mb-3" disabled>
+                            Proceder a la validation
+                        </button>
+                        
+                        <div class="d-flex justify-content-center gap-2">
+                            <i class="bi bi-shield-check text-success"></i>
+                            <small class="text-muted">Securisée</small>
+                        </div>
+                    </div>
+                </div>                     
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function updateQuantity(productId, change) {
+            const input = event.target.parentElement.querySelector('.quantity-input');
+            let value = parseInt(input.value) + change;
+            if (value >= 1) {
+                input.value = value;
+            }
+        }
+    </script>
+</div>
+{% endblock %}
+

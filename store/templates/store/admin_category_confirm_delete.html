@@ -1,0 +1,12 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Supprimer la catégorie</h2>
+    <p>Voulez-vous vraiment supprimer la catégorie <strong>{{ category.name }}</strong> ?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmer</button>
+        <a href="{% url 'store:admin_category_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

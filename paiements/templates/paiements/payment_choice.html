@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Choisir votre méthode de paiement</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .bg-gradient-primary {
+            background: linear-gradient(90deg, #0d6efd 0%, #6610f2 100%);
+        }
+        .custom-option {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .custom-option:hover {
+            border-color: #0d6efd !important;
+            background-color: #e9ecef;
+        }
+        .card {
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header spécial -->
+    <header class="bg-gradient-primary py-4 mb-4">
+        <div class="container text-center">
+            <h2 class="text-white mb-1">Finalisation de la commande</h2>
+            <p class="text-light mb-0">Sélectionnez votre méthode de paiement préférée</p>
+        </div>
+    </header>
+    <div class="col-lg-8">
+                    <div class="d-flex">
+                        {% if messages %}
+                            <div class="container mt-4">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5">
+                        <!-- Montant total et résumé -->
+                        <div class="text-center mb-4">
+                            <h3 class="text-primary mb-2 fw-bold">{{ order.total_amount }} FCFA</h3>
+                            <p class="text-muted small mb-0">Commande #{{ order.id }}</p>
+                        </div>
+
+                        <!-- Options de paiement -->
+                        <div class="payment-options mb-4">
+                            <div class="form-check custom-option border rounded mb-3 p-3 bg-light">
+                                <input class="form-check-input" type="radio" name="payment_method" id="mobile_money" value="mobile_money">
+                                <label class="form-check-label w-100 d-flex align-items-center" for="mobile_money">
+                                    <i class="fas fa-mobile-alt fa-2x text-primary me-3"></i>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">Mobile Money</h6>
+                                        <span class="text-muted small">Paiement rapide et sécurisé</span>
+                                    </div>
+                                </label>
+                            </div>
+                            {% if order.shipping_address.city|lower == 'ouagadougou' %}
+                            <div class="form-check custom-option border rounded p-3 bg-light">
+                                <input class="form-check-input" type="radio" name="payment_method" id="cash" value="cash">
+                                <label class="form-check-label w-100 d-flex align-items-center" for="cash">
+                                    <i class="fas fa-money-bill fa-2x text-success me-3"></i>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">Paiement à la livraison</h6>
+                                        <span class="text-muted small">Payez à la réception (Ouagadougou uniquement)</span>
+                                    </div>
+                                </label>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Formulaire Mobile Money (affiché uniquement si sélectionné) -->
+                        <form id="mobile_money_form" method="post" action="{% url 'paiements:initialize_payment' order.id %}" class="needs-validation d-none" novalidate>
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <select name="operator" class="form-select form-select-lg" required>
+                                    <option value="" selected disabled>Choisir l'opérateur</option>
+                                    <option value="orange">Orange Money</option>
+                                    <option value="moov">Moov Money</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="tel" name="phone_number" class="form-control form-control-lg" placeholder="+22601020304" pattern="^\+226\d{8}$" required>
+                                </div>
+                                <div class="form-text">Format: +226XXXXXXXX</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                Procéder au paiement
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </form>
+
+                        <!-- Formulaire Paiement à la livraison (affiché uniquement si sélectionné et Ouagadougou) -->
+                        {% if order.shipping_address.city|lower == 'ouagadougou' %}
+                        <form id="cash_form" method="post" action="{% url 'paiements:cash_on_delivery' order.id %}" class="d-none">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                Passer la commande
+                                <i class="fas fa-check ms-2"></i>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer spécial -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <small>&copy; {{ now|date:"Y" }} WoodiTech - Paiement sécurisé</small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS + Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMoneyForm = document.getElementById('mobile_money_form');
+        const cashForm = document.getElementById('cash_form');
+        const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+
+        paymentMethods.forEach(method => {
+            method.addEventListener('change', function() {
+                if (this.value === 'mobile_money') {
+                    mobileMoneyForm.classList.remove('d-none');
+                    mobileMoneyForm.querySelectorAll('select, input').forEach(el => el.required = true);
+                    if (cashForm) cashForm.classList.add('d-none');
+                } else if (this.value === 'cash') {
+                    if (cashForm) cashForm.classList.remove('d-none');
+                    mobileMoneyForm.classList.add('d-none');
+                    mobileMoneyForm.querySelectorAll('select, input').forEach(el => el.required = false);
+                } else {
+                    mobileMoneyForm.classList.add('d-none');
+                    mobileMoneyForm.querySelectorAll('select, input').forEach(el => el.required = false);
+                    if (cashForm) cashForm.classList.add('d-none');
+                }
+            });
+        });
+
+        // Validation personnalisée
+        mobileMoneyForm.addEventListener('submit', function(event) {
+            if (!mobileMoneyForm.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            mobileMoneyForm.classList.add('was-validated');
+        });
+    });
+    </script>
+</body>
+</html>

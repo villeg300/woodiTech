@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="dist/css/bootstrap.min.css" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'store/dist/css/bootstrap.min.css' %}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+
+
+
+<div class="container py-4" style="margin-top: 90px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Tableau de bord administrateur</h1>
+            <p class="text-muted small mb-0">Bienvenue, Admin</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'store:admin_add_product' %}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-1"></i> Ajouter un produit
+            </a>
+            <a href="{% url 'store:admin_add_livreur' %}" class="btn btn-success btn-sm">
+                <i class="fas fa-user-plus me-1"></i> Ajouter un livreur
+            </a>
+            <a href="{% url 'store:admin_add_category' %}" class="btn btn-secondary btn-sm">
+                <i class="fas fa-folder-plus me-1"></i> Ajouter une catégorie
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Clients</h6>
+                            <h3 class="mb-0">{{ nb_clients }}</h3>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 p-3 rounded">
+                            <i class="fas fa-users text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Livreurs</h6>
+                            <h3 class="mb-0">{{ nb_livreurs }}</h3>
+                        </div>
+                        <div class="bg-success bg-opacity-10 p-3 rounded">
+                            <i class="fas fa-motorcycle text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Commandes</h6>
+                            <h3 class="mb-0">{{ nb_commandes }}</h3>
+                        </div>
+                        <div class="bg-warning bg-opacity-10 p-3 rounded">
+                            <i class="fas fa-shopping-cart text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Revenus</h6>
+                            <h3 class="mb-0">{{ total_revenus }} FCFA</h3>
+                        </div>
+                        <div>
+                            <h6 class="text-muted mb-2">Frais livraison collectés</h6>
+                            <h3 class="mb-0">{{ total_shipping_fees }} FCFA</h3>
+                        </div>
+                        <div class="bg-info bg-opacity-10 p-3 rounded">
+                            <i class="fas fa-money-bill-wave text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Activité récente</h5>
+                        <a href="{% url 'store:admin_order_list' %}" class="btn btn-link text-decoration-none p-0">Voir toutes les commandes</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for activity in recent_activities %}
+                        <li class="list-group-item">
+                            <i class="fas fa-circle text-primary me-2"></i>{{ activity }}
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">Aucune activité récente.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0">Actions rapides</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'store:admin_add_product' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-plus me-2"></i>Ajouter un produit
+                        </a>
+                        <a href="{% url 'store:admin_user_list' %}" class="btn btn-outline-success">
+                            <i class="fas fa-users me-2"></i>Gérer les utilisateurs
+                        </a>
+                        <a href="{% url 'store:admin_livreur_list' %}" class="btn btn-outline-info">
+                            <i class="fas fa-motorcycle me-2"></i>Gérer les livreurs
+                        </a>
+                        <a href="{% url 'store:admin_product_list' %}" class="btn btn-outline-warning">
+                            <i class="fas fa-box me-2"></i>Liste des produits
+                        </a>
+                        <a href="{% url 'store:admin_category_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-folder me-2"></i>Gérer les catégories
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

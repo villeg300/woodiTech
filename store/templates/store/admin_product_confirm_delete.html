@@ -1,0 +1,25 @@
+{% extends 'store/base.html' %}
+{% block title %}Supprimer le produit - Admin{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Supprimer le produit</h4>
+                </div>
+                <div class="card-body">
+                    <p>Voulez-vous vraiment supprimer le produit <strong>{{ product.name }}</strong> ?</p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                        <a href="{% url 'store:admin_product_list' %}" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+:root {
+    --main-color: #191989;
+    --main-color-rgb: 25,25,137;
+}
+body {
+    background: #f8f9fa;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+}
+.users-card {
+    background: #fff;
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 8px rgba(25,25,137,0.08);
+    padding: 2rem 1.5rem;
+    margin: 2rem auto;
+    max-width: 420px;
+}
+.users-title {
+    color: var(--main-color);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.users-form .form-label {
+    font-weight: 500;
+}
+.users-form .form-control:focus {
+    border-color: var(--main-color);
+    box-shadow: 0 0 0 0.2rem rgba(var(--main-color-rgb),.15);
+}
+.users-form .btn-primary {
+    background: var(--main-color) !important;
+    border-color: var(--main-color) !important;
+    width: 100%;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+.users-form .btn-primary:hover {
+    background: #15156b !important;
+    border-color: #15156b !important;
+}
+.users-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.2rem;
+    color: var(--main-color);
+    text-decoration: underline;
+    font-size: 1rem;
+}
+.users-error {
+    color: #d32f2f;
+    font-size: 0.98rem;
+    margin-bottom: 0.7rem;
+    text-align: center;
+}
+@media (max-width: 575.98px) {
+    .users-card {
+        padding: 1.2rem 0.5rem;
+        margin: 1rem auto;
+    }
+    .users-title {
+        font-size: 1.2rem;
+    }
+    .users-form .btn-primary {
+        font-size: 1rem;
+        padding: 0.7rem 1rem;
+    }
+}

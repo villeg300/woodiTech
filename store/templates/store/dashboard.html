@@ -1,0 +1,77 @@
+{% extends 'store/base.html' %}
+{% block title %}Mon espace - Woodi Tech{% endblock %}
+{% block content %}
+<div class="container py-5 my-5">
+  <h2 class="mb-4" style="color:#191989;font-weight:700;text-align:center;">Mon tableau de bord</h2>
+<div class="row g-4 mt-4">
+  <div class="col-12 col-md-6">
+    <div class="card shadow-sm mb-4" style="border-radius:16px;">
+      <div class="card-body">
+        <h4 class="card-title mb-3" style="color:#191989;font-weight:600;">Mes commandes récentes</h4>
+        <ul class="list-group mb-3">
+          {% for order in orders %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>
+                <a href="{{ order.get_absolute_url }}" style="color:#191989;font-weight:600;">Commande #{{ order.pk }}</a>
+                <span class="badge bg-light text-dark ms-2">{{ order.get_status_display }}</span>
+                <br><small>Date : {{ order.created_at|date:'d/m/Y' }}</small>
+              </span>
+              <span style="font-weight:600;">{{ order.total_amount }} FCFA</span>
+            </li>
+          {% empty %}
+            <li class="list-group-item text-center">Aucune commande.</li>
+          {% endfor %}
+        </ul>
+        <a href="{% url 'store:order_list' %}" class="btn btn-outline-primary w-100">Voir toutes mes commandes</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6">
+    <div class="card shadow-sm mb-4" style="border-radius:16px;">
+      <div class="card-body">
+        <h4 class="card-title mb-3" style="color:#191989;font-weight:600;">Mes adresses de livraison</h4>
+        <div class="table-responsive mb-3">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr style="color:#191989;font-weight:600;">
+                <th>Nom</th>
+                <th>Téléphone</th>
+                <th>Ville</th>
+                <th>Zone</th>
+                <th>Défaut</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for address in addresses %}
+              <tr>
+                <td>{{ address.full_name }}</td>
+                <td>{{ address.phone }}</td>
+                <td>{{ address.city }}</td>
+                <td>{{ address.zone }}</td>
+                <td>{% if address.is_default %}<span class="badge bg-success">Oui</span>{% else %}Non{% endif %}</td>
+                <td><a href="{% url 'store:edit_address' address.pk %}" class="btn btn-sm btn-link">Modifier</a></td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="6" class="text-center">Aucune adresse enregistrée.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <a href="{% url 'store:manage_addresses' %}" class="btn btn-outline-secondary w-100">Gérer mes adresses</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mt-4 d-flex gap-3 justify-content-center">
+  <a href="{% url 'store:cart' %}" class="btn btn-primary">Voir mon panier</a>
+  <a href="{% url 'password_change' %}" class="btn btn-secondary">changer mon mot de passe</a>
+  {% if admin_link %}
+    <a href="{% url admin_link %}" class="btn btn-warning">Espace Admin</a>
+  {% endif %}
+  {% if livreur_link %}
+    <a href="{% url livreur_link %}" class="btn btn-info">Espace Livreur</a>
+  {% endif %}
+</div>
+</div>
+{% endblock %}

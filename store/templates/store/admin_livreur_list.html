@@ -1,0 +1,47 @@
+{% extends 'store/base.html' %}
+{% block title %}Livreurs - Admin{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">Liste des livreurs</h2>
+        <a href="{% url 'store:admin_add_livreur' %}" class="btn btn-success">
+            <i class="fas fa-user-plus me-2"></i>Ajouter un livreur
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th>#</th>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th>Date d'inscription</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for livreur in livreurs %}
+                <tr>
+                    <td>{{ livreur.id }}</td>
+                    <td>{{ livreur.first_name }}</td>
+                    <td>{{ livreur.last_name }}</td>
+                    <td>{{ livreur.phone }}</td>
+                    <td>{{ livreur.email }}</td>
+                    <td>{{ livreur.role }}</td>
+                    <td>{{ livreur.date_joined|date:'d/m/Y' }}</td>
+                    <td>
+                        <a href="{% url 'store:admin_edit_livreur' livreur.pk %}" class="btn btn-outline-info btn-sm"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'store:admin_delete_livreur' livreur.pk %}" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8" class="text-center">Aucun livreur trouvé.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

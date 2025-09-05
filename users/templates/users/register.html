@@ -1,0 +1,52 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'users/css/users.css' %}">
+<div class="users-card">
+    <h2 class="users-title">Créer un compte</h2>
+    <form method="post" class="users-form">
+        {% csrf_token %}
+        {% if global_error %}<div class="users-error">{{ global_error }}</div>{% endif %}
+        <div class="mb-3">
+            <label class="form-label">Prénom</label>
+            <input type="text" name="first_name" class="form-control" value="{{ data.first_name }}" required>
+            {% if errors.first_name %}<div class="users-error">{{ errors.first_name }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Nom</label>
+            <input type="text" name="last_name" class="form-control" value="{{ data.last_name }}" required>
+            {% if errors.last_name %}<div class="users-error">{{ errors.last_name }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ data.email }}" required>
+            {% if errors.email %}<div class="users-error">{{ errors.email }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Téléphone</label>
+            <div class="d-flex gap-2">
+                <select name="country_code" class="form-select" style="max-width:120px;">
+                    <option value="">Indicatif</option>
+                    {% for cc in country_codes %}
+                        <option value="{{ cc.code }}" {% if data.country_code == cc.code %}selected{% endif %}>{{ cc.code }} ({{ cc.name }})</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="phone" class="form-control" value="{{ data.phone }}" placeholder="Numéro sans indicatif" required>
+            </div>
+            {% if errors.phone %}<div class="users-error">{{ errors.phone }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mot de passe</label>
+            <input type="password" name="password1" class="form-control" required>
+            {% if errors.password1 %}<div class="users-error">{{ errors.password1 }}</div>{% endif %}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Confirmer le mot de passe</label>
+            <input type="password" name="password2" class="form-control" required>
+            {% if errors.password2 %}<div class="users-error">{{ errors.password2 }}</div>{% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Créer mon compte</button>
+        <a href="{% url 'login' %}" class="users-link">Déjà inscrit ? Se connecter</a>
+    </form>
+</div>
+{% endblock %}

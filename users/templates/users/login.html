@@ -1,0 +1,23 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'users/css/users.css' %}">
+<div class="users-card">
+    <h2 class="users-title">Connexion</h2>
+    <form method="post" class="users-form">
+        {% csrf_token %}
+        {% if errors.non_field %}<div class="users-error">{{ errors.non_field }}</div>{% endif %}
+        <div class="mb-3">
+            <label class="form-label">Email ou téléphone</label>
+            <input type="text" name="identifier" class="form-control" value="{{ data.identifier }}" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Mot de passe</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+        <a href="{% url 'forgot_password' %}" class="users-link">Mot de passe oublié ?</a>
+        <a href="{% url 'register' %}" class="users-link">Créer un compte</a>
+    </form>
+</div>
+{% endblock %}

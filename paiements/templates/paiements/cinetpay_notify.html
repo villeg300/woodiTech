@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="card-title">Traitement du Paiement</h2>
+                    <p class="lead">Veuillez patienter pendant que nous vérifions votre paiement...</p>
+                    <div class="spinner-border text-primary mt-3" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Vérifie le statut du paiement toutes les 5 secondes
+    function checkPaymentStatus() {
+        fetch('/paiements/check-status/{{ payment.id }}/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'completed') {
+                    window.location.href = "{% url 'paiements:payment_success' payment.id %}";
+                } else if (data.status === 'failed') {
+                    window.location.href = "{% url 'paiements:payment_failed' payment.id %}";
+                } else {
+                    setTimeout(checkPaymentStatus, 5000);
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                setTimeout(checkPaymentStatus, 5000);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        checkPaymentStatus();
+    });
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'store/base.html' %}
+{% block title %}Accueil - Woodi Tech{% endblock %}
+
+
+
+{% load static %}
+{% block content %}
+  <main>
+    <section
+      class="banner d-flex justify-content-center align-items-center pt-5"
+    >
+      <div class="container my-5 py-5">
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6">
+            
+            <h1 class="text-capitalize py-3 banner-desc">
+              Bienvenue chez Woodi Tech<br>
+            </h1>
+            <p class="text-lower banner-subdesc mb-4">
+              Durabilité, innovation et protection, au meilleur prix
+              Votre destination pour les meilleurs produits technologiques au Burkina faso.
+            </p>
+            {% if user.is_authenticated %}
+              <button class="btn btn-register btn-md rounded-0">
+                <a href="{% url 'logout' %}" style="color:white;text-decoration:none;">Se deconnecter</a>
+              </button>
+            {% else %}
+            <p>
+              <button class="btn btn-principal btn-md me-2 rounded-0">
+                <a href="{% url 'login' %}" style="color:white;text-decoration:none;">Se connecter</a>
+              </button>
+              <button class="btn btn-register btn-md rounded-0">
+                <a href="{% url 'register' %}" style="color:white;text-decoration:none;">S'INSCRIRE</a>
+              </button>
+            </p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="services py-5">
+        <div class="container">
+            <h2 class="text-center mb-5 fw-bold">Nos services</h2>
+            <div class="row g-4 justify-content-center">
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card h-100 shadow service-card text-center">
+                <div class="card-body">
+                    <i class="fa-solid fa-truck fa-2x mb-3 text-primary"></i>
+                    <h5 class="card-title">Livraison rapide</h5>
+                    <p class="card-text">
+                    Profitez d'une livraison express partout en Afrique.
+                    </p>
+                </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card h-100 shadow service-card text-center">
+                <div class="card-body">
+                    <i class="fa-solid fa-headset fa-2x mb-3 text-success"></i>
+                    <h5 class="card-title">Support 24/7</h5>
+                    <p class="card-text">
+                    Notre équipe est disponible à tout moment pour vous aider.
+                    </p>
+                </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="card h-100 shadow service-card text-center">
+                <div class="card-body">
+                    <i
+                    class="fa-solid fa-shield-halved fa-2x mb-3 text-warning"
+                    ></i>
+                    <h5 class="card-title">Paiement sécurisé</h5>
+                    <p class="card-text">
+                    Vos transactions sont protégées et confidentielles.
+                    </p>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="products">
+      <div class="container py-5">
+        <h2 class="text-center mb-5 fw-bold">Nos produits</h2>
+        <div class="row g-4 justify-content-center">
+            {% for product in featured_products %}
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card h-100 shadow product-card" >
+                    <img
+                        src="{{ product.image.url }}"
+                        class="card-img-top"
+                        alt="{{ product.name }}"
+                    />
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 mb-0">{{ product.price }} | FCFA</span>
+                        <div>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-fill text-warning"></i>
+                            <i class="bi bi-star-half text-warning"></i>
+                            <small class="text-muted">(4.5)</small>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light">
+                      <div></div>
+                      <a href="{% url 'store:product_detail' product.pk %}" class="btn btn-outline-secondary btn-sm">
+                        detail
+                        </a>
+                      
+                    </form>
+                    </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div style="text-align:center;width:100%;color:#888;">Aucun produit disponible pour le moment.</div>
+            {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

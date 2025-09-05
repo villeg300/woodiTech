@@ -1,0 +1,38 @@
+{% extends 'store/base.html' %}
+{% block title %}Modifier adresse - Woodi Tech{% endblock %}
+{% block content %}
+<div class="container" style="max-width:500px;margin:0 auto;">
+    <h2 class="mb-4" style="color:#191989;font-weight:700;text-align:center;">Modifier l'adresse de livraison</h2>
+    <form method="post" class="card shadow-sm p-4" style="border-radius:16px;">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Nom complet</label>
+            <input type="text" name="full_name" class="form-control" value="{{ address.full_name }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Téléphone</label>
+            <input type="text" name="phone" class="form-control" value="{{ address.phone }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Région</label>
+            <input type="text" name="region" class="form-control" value="{{ address.region }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Ville</label>
+            <input type="text" name="city" class="form-control" value="{{ address.city }}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Zone</label>
+            <input type="text" name="zone" class="form-control" value="{{ address.zone }}">
+        </div>
+        <div class="form-check mb-3">
+            <input type="checkbox" name="is_default" class="form-check-input" id="is_default" {% if address.is_default %}checked{% endif %}>
+            <label class="form-check-label" for="is_default">Définir comme adresse par défaut</label>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success w-50">Enregistrer</button>
+            <a href="{% url 'store:manage_addresses' %}" class="btn btn-secondary w-50">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

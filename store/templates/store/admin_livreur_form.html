@@ -1,0 +1,50 @@
+{% extends 'store/base.html' %}
+{% block title %}Ajouter/Modifier un livreur - Admin{% endblock %}
+{% block content %}
+<div class="container py-5" style="margin-top: 90px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">{% if livreur %}Modifier{% else %}Ajouter{% endif %} un livreur</h4>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Téléphone</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ livreur.phone|default:'' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">Prénom</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ livreur.first_name|default:'' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Nom</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ livreur.last_name|default:'' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ livreur.email|default:'' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Rôle</label>
+                            <input type="text" class="form-control" id="role" name="role" value="Livreur" readonly>
+                        </div>
+                        {% if not livreur %}
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-success">Enregistrer</button>
+                        <a href="{% url 'store:admin_livreur_list' %}" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

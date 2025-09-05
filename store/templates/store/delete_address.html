@@ -1,0 +1,22 @@
+{% extends 'store/base.html' %}
+{% block title %}Supprimer adresse - Woodi Tech{% endblock %}
+{% block content %}
+<div class="container" style="max-width:500px;margin:0 auto;">
+    <h2 class="mb-4" style="color:#191989;font-weight:700;text-align:center;">Supprimer l'adresse</h2>
+    <div class="card shadow-sm p-4 mb-3" style="border-radius:16px;">
+        <p class="mb-3">Êtes-vous sûr de vouloir supprimer cette adresse ?</p>
+        <ul class="list-group mb-3">
+            <li class="list-group-item"><strong>Nom complet:</strong> {{ address.full_name }}</li>
+            <li class="list-group-item"><strong>Téléphone:</strong> {{ address.phone }}</li>
+            <li class="list-group-item"><strong>Région:</strong> {{ address.region }}</li>
+            <li class="list-group-item"><strong>Ville:</strong> {{ address.city }}</li>
+            <li class="list-group-item"><strong>Zone:</strong> {{ address.zone }}</li>
+        </ul>
+        <form method="post" class="d-flex gap-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger w-50">Supprimer</button>
+            <a href="{% url 'store:manage_addresses' %}" class="btn btn-secondary w-50">Annuler</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

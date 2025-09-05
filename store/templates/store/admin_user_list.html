@@ -1,0 +1,37 @@
+{% extends 'store/base.html' %}
+{% block title %}Utilisateurs - Admin{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold text-primary mb-4">Liste des clients</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>#</th>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th>Date d'inscription</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.date_joined|date:'d/m/Y' }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center">Aucun utilisateur trouvé.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'store/base.html' %}
+{% block title %}{{ product.name }} - Woodi Tech{% endblock %}
+{% block content %}
+
+    
+
+<div class="py-5" style="margin-top: 90px;">
+    <div class="container mt-5">
+        <style>
+        .product-image {
+            max-height: 400px;
+            object-fit: cover;
+        }
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+        .thumbnail:hover, .thumbnail.active {
+            opacity: 1;
+        }
+    </style>
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-6 mb-4">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded mb-3 product-image" id="mainImage">
+            <div class="d-flex justify-content-between">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="thumbnail rounded active" onclick="changeImage(event, this.src)">
+                {% for image in product.more_images.all %}
+                    <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" class="thumbnail rounded" onclick="changeImage(event, this.src)">
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-md-6">
+            <h2 class="mb-3">{{ product.name }}</h2>
+            <p class="text-muted mb-4">SKU: {{ product.slug }}</p>
+            <div class="mb-3">
+                <span class="h4 me-2">FCFA {{ product.price }}</span>
+                <span class="text-muted"><s>FCFA {{ product.price }}</s></span>
+            </div>
+            <div class="mb-3">
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-fill text-warning"></i>
+                <i class="bi bi-star-half text-warning"></i>
+                <span class="ms-2">4.5 (120 reviews)</span>
+            </div>
+            <p class="mb-4">{{ product.description }}</p>
+            <p class="mb-4">Nombres de {{ product.name }} dans le panier : {{ item.quantity }}</p>
+            <form action="{% url 'store:add_to_cart' product.pk %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-4 d-flex item-center">
+                    <label for="quantity" class="form-label">Quantitée a Ajouter:</label>
+                    <input  name="quantity" type="number" class="form-control" id="quantity" value="1" min="1" style="width: 80px;">
+                </div>
+            <button type="submit" class="btn btn-primary btn-lg mb-3 me-2">
+                    <i class="bi bi-cart-plus"></i> Ajouter au panier
+
+            </form>                 
+           </button>
+            <div class="mt-4">
+                <h5>Categorie:</h5>
+                <ul>
+                    <li class="text-uppercase">{{ product.category }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function changeImage(event, src) {
+            document.getElementById('mainImage').src = src;
+            document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+</script>
+
+
+{% endblock %}
+

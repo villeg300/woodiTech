@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <h3>Redirection vers la page de paiement...</h3>
+    <p>Veuillez patienter, vous allez être redirigé vers la page de paiement sécurisée.</p>
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const stripe = Stripe('{{ public_key }}');
+    stripe.redirectToCheckout({
+        sessionId: '{{ session_id }}'
+    }).then(function (result) {
+        if (result.error) {
+            alert(result.error.message);
+            window.location.href = '{% url "store:order_detail" payment.order.pk %}';
+        }
+    });
+</script>
+{% endblock %}

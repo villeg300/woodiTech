@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="card-title mb-4">Statut du Paiement</h2>
+                    
+                    {% if payment.status == 'completed' %}
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle fa-3x mb-3"></i>
+                            <h4>Paiement Réussi!</h4>
+                            <p>Votre paiement a été traité avec succès.</p>
+                        </div>
+                    {% elif payment.status == 'pending' %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-clock fa-3x mb-3"></i>
+                            <h4>Paiement en Attente</h4>
+                            <p>Votre paiement est en cours de traitement.</p>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-times-circle fa-3x mb-3"></i>
+                            <h4>Échec du Paiement</h4>
+                            <p>{{ error_message|default:"Une erreur s'est produite lors du traitement de votre paiement." }}</p>
+                        </div>
+                    {% endif %}
+
+                    <div class="payment-details mt-4">
+                        <p><strong>Montant:</strong> {{ payment.amount }} FCFA</p>
+                        <p><strong>Référence:</strong> {{ payment.transaction_id }}</p>
+                        <p><strong>Date:</strong> {{ payment.created_at|date:"d/m/Y H:i" }}</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{% url 'store:order_detail' payment.order.pk %}" class="btn btn-primary">
+                            Voir les détails de la commande
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

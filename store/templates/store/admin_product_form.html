@@ -1,0 +1,75 @@
+{% extends 'store/base.html' %}
+{% block title %}Ajouter/Modifier un produit - Admin{% endblock %}
+{% block content %}
+<div class="container py-5" style="margin-top: 90px;">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">{% if product %}Modifier{% else %}Ajouter{% endif %} un produit</h4>
+                </div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nom du produit</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ product.name|default:'' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Catégorie</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Sélectionner une catégorie</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}" {% if product and product.category and product.category.id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Prix (FCFA)</label>
+                            <input type="number" class="form-control" id="price" name="price" value="{{ product.price|default:'' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ product.description|default:'' }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image principale</label>
+                            <input type="file" class="form-control" id="image" name="image" {% if not product %}required{% endif %}>
+                            {% if product and product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail mt-2" style="max-width: 150px;">
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="more_images" class="form-label">Autres images</label>
+                            <input type="file" class="form-control" id="more_images" name="more_images" multiple>
+                            {% if product and product.more_images.all %}
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    {% for img in product.more_images.all %}
+                                        <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" class="img-thumbnail" style="max-width: 80px;">
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="shipping_fee_unit" class="form-label">Frais de livraison unitaire</label>
+                            <input type="number" class="form-control" id="shipping_fee_unit" name="shipping_fee_unit" value="{{ product.shipping_fee_unit|default:'' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="shipping_fee_bulk" class="form-label">Frais de livraison en gros (lot de 5)</label>
+                            <input type="number" class="form-control" id="shipping_fee_bulk" name="shipping_fee_bulk" value="{{ product.shipping_fee_bulk|default:'' }}" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="is_available" name="is_available" {% if product and product.is_available %}checked{% endif %}>
+                            <label for="is_available" class="form-check-label">Disponible</label>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        <a href="{% url 'store:admin_product_list' %}" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

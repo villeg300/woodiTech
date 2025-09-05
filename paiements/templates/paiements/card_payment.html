@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Paiement par carte bancaire</h3>
+                    
+                    <div class="payment-details mb-4">
+                        <p><strong>Montant à payer:</strong> {{ payment.amount }} FCFA</p>
+                        <p><strong>Numéro de transaction:</strong> {{ payment.transaction_id }}</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="card_number">Numéro de carte</label>
+                            <input type="text" class="form-control" id="card_number" required 
+                                   placeholder="1234 5678 9012 3456" pattern="\d{4} \d{4} \d{4} \d{4}">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="expiry">Date d'expiration</label>
+                                <input type="text" class="form-control" id="expiry" required 
+                                       placeholder="MM/YY" pattern="\d{2}/\d{2}">
+                            </div>
+                            <div class="col">
+                                <label for="cvv">CVV</label>
+                                <input type="text" class="form-control" id="cvv" required 
+                                       placeholder="123" pattern="\d{3}">
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label for="card_holder">Nom sur la carte</label>
+                            <input type="text" class="form-control" id="card_holder" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Payer {{ payment.amount }} FCFA</button>
+                        <a href="{% url 'store:order_detail' payment.order.id %}" class="btn btn-outline-secondary">Annuler</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

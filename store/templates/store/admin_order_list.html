@@ -1,0 +1,33 @@
+{% extends 'store/base.html' %}
+{% block title %}Commandes - Admin{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold text-primary mb-4">Liste des commandes</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-warning">
+                <tr>
+                    <th>#</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.user.username }}</td>
+                    <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                    <td>{{ order.total_amount }} FCFA</td>
+                    <td>{{ order.get_status_display }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center">Aucune commande trouvée.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Liste des catégories</h2>
+    <a href="{% url 'store:admin_add_category' %}" class="btn btn-primary mb-3">Ajouter une catégorie</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr>
+                <td>{{ category.name }}</td>
+                <td>{{ category.description }}</td>
+                <td>
+                    <a href="{% url 'store:admin_edit_category' category.pk %}" class="btn btn-sm btn-warning">Modifier</a>
+                    <a href="{% url 'store:admin_delete_category' category.pk %}" class="btn btn-sm btn-danger">Supprimer</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center">Aucune catégorie</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

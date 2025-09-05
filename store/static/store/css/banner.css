@@ -1,0 +1,29 @@
+
+.btn-register{
+    color: #ffffff;
+    background: #000;
+    border: 2px solid #000000;
+    transition: 0.5s;
+}
+
+.btn-register:hover,
+.btn-register:active{
+    color: #000000;
+    background: #ffffff;
+    border: 2px solid #ffffff;
+
+}
+
+.banner{
+    background: linear-gradient(rgba(0, 0, 0, 0.63),rgba(0,0,0,.63)), url('../imgs/banner1.png') center center fixed no-repeat;
+    background-size:cover;
+    height: 100vh;
+
+}
+
+.banner-desc{
+    color: #ffffff;
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
